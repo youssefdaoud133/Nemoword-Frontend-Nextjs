@@ -1,0 +1,120 @@
+body {
+  /* center in the viewport */
+}
+
+/* keyframe animations for the fish */
+/* animate the mouth and head to rotate as to open the mouth of the fish
+  given the negative scale of the rotated semicircle, the rotation affects the two shapes in the opposite direction (on purpose)
+  */
+#head,
+#mouth {
+  animation: open 3s -1.5s cubic-bezier(0.645, 0.045, 0.355, 1) infinite both;
+}
+@keyframes open {
+  25% {
+    transform: rotate(30deg);
+  }
+  50%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+/* animate the fin, flipper and tail to rotate around their respective hinge */
+#fin,
+#flipper,
+#tail {
+  animation: rotate 1.75s cubic-bezier(0.645, 0.045, 0.355, 1) infinite
+    alternate both;
+}
+/* faster animation for the flipper, animated in the opposite direction */
+#flipper {
+  animation-duration: 1.25s;
+  animation-direction: alternate-reverse;
+}
+/* nagative margin for the tail, to offset it from the rotate animation */
+#tail {
+  animation-delay: -3s;
+  animation-duration: 1.5s;
+}
+
+@keyframes rotate {
+  50% {
+    transform: rotate(-10deg);
+  }
+  100% {
+    transform: rotate(10deg);
+  }
+}
+
+/* animate the entire fish to translate from right to left
+  from outside the viewbox to roughly the first third
+  */
+.translate {
+  animation: translate 6s cubic-bezier(0.645, 0.045, 0.355, 1) infinite both;
+}
+@keyframes translate {
+  0% {
+    transform: translateX(400px);
+  }
+  65% {
+    transform: translateX(-120px);
+  }
+  80% {
+    transform: translateX(-100px);
+  }
+  100% {
+    transform: translateX(-120px);
+  }
+}
+
+/* animate the entire fish to disappear behind the subsequent creature */
+.scale {
+  animation: scale 6s cubic-bezier(0.645, 0.045, 0.355, 1) infinite both;
+}
+@keyframes scale {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(0.9);
+  }
+  90% {
+    transform: scale(0.6);
+  }
+  95%,
+  100% {
+    transform: scale(0);
+  }
+}
+
+/* animate the clip to fake the overlap between the second and first fish */
+#clip {
+  animation: clip 6s cubic-bezier(0.645, 0.045, 0.355, 1) infinite both;
+}
+@keyframes clip {
+  0%,
+  83.25% {
+    transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(-200px);
+  }
+}
+
+/* animate the group#bubbles to highlight each iteration */
+#bubbles {
+  animation: bubbles 3s cubic-bezier(0.645, 0.045, 0.355, 1) infinite both;
+}
+@keyframes bubbles {
+  0%,
+  70% {
+    transform: scale(0);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}

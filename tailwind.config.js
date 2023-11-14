@@ -1,21 +1,14 @@
-import type { Config } from "tailwindcss";
-
-const config: Config = {
+/** @type {import('tailwindcss').Config} */
+/* eslint-disable max-len */
+module.exports = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}", // Tremor module
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     transparent: "transparent",
     current: "currentColor",
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
       colors: {
         // light mode
         tremor: {
@@ -71,7 +64,7 @@ const config: Config = {
           },
           content: {
             subtle: "#4b5563", // gray-600
-            DEFAULT: "#6b7280", // gray-500
+            DEFAULT: "#6b7280", // gray-600
             emphasis: "#e5e7eb", // gray-200
             strong: "#f9fafb", // gray-50
             inverted: "#000000", // black
@@ -81,16 +74,12 @@ const config: Config = {
       boxShadow: {
         // light
         "tremor-input": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-        "tremor-card":
-          "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
-        "tremor-dropdown":
-          "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+        "tremor-card": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+        "tremor-dropdown": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
         // dark
         "dark-tremor-input": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-        "dark-tremor-card":
-          "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
-        "dark-tremor-dropdown":
-          "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+        "dark-tremor-card": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+        "dark-tremor-dropdown": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
       },
       borderRadius: {
         "tremor-small": "0.375rem",
@@ -98,7 +87,7 @@ const config: Config = {
         "tremor-full": "9999px",
       },
       fontSize: {
-        // "tremor-label": ["0.75rem"],
+        "tremor-label": ["0.75rem"],
         "tremor-default": ["0.875rem", { lineHeight: "1.25rem" }],
         "tremor-title": ["1.125rem", { lineHeight: "1.75rem" }],
         "tremor-metric": ["1.875rem", { lineHeight: "2.25rem" }],
@@ -136,20 +125,3 @@ const config: Config = {
   ],
   plugins: [require("@headlessui/tailwindcss")],
 };
-export default config;
-// content: [
-//   "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-//   "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-//   "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-//   // "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}", // Tremor module
-// ],
-// theme: {
-//   extend: {
-//     backgroundImage: {
-//       "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-//       "gradient-conic":
-//         "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-//     },
-//   },
-// },
-// plugins: [],
