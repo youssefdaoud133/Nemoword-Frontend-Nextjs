@@ -1,7 +1,10 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
-import axios from "axios";
+
+// import call endpoint class
+import { CallEndpoint } from "../../utils/axios";
+const endpoint = new CallEndpoint(undefined, "auth/signup");
 
 // rtk
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +16,8 @@ import Loader from "../../components/loader";
 
 // use route
 import { useRouter } from "next/navigation";
+import { log } from "console";
+import ValidationSignUp from "./ValidationSignUp";
 
 interface formDataint {
   email: string;
@@ -34,6 +39,7 @@ const Signincomp: React.FC = () => {
   // usestate
   const [loading, setLoading] = useState(false);
   const [errormsg, setErrormsg] = useState("");
+  const [acceptmsg, setacceptmsg] = useState("");
   const [formData, setFormData] = useState<formDataint>({
     email: "",
     username: "", // Add username field
@@ -48,31 +54,34 @@ const Signincomp: React.FC = () => {
   const router = useRouter();
 
   // handles button
-  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    try {
-      setLoading(true);
-      const response = await axios.post<resint>(
-        "http://localhost:8000/user",
-        formData
-      );
-      if (!response.data.newuser) {
-        console.log(response.data);
+  const handleFormSubmit = async () => {
+    setErrormsg("");
+    setacceptmsg("");
+    // validate form data before end point
+    const Validations: string = ValidationSignUp(formData);
+    if (Validations.length === 0) {
+      try {
+        setLoading(true);
+        const response: any = await endpoint.signup(formData);
+        if (response.accept) {
+          setacceptmsg(response.status);
+        } else {
+          setErrormsg(response.status || "");
+        }
 
-        setErrormsg(response.data.message);
         setLoading(false);
-      } else {
-        router.push("/signin");
+      } catch (e: any) {
+        console.log(e);
+
+        if (typeof e.response.data.message === "string") {
+          setErrormsg(e.response.data.message);
+        } else {
+          setErrormsg(e.response.data.message[0]);
+        }
+        setLoading(false);
       }
-      console.log(response);
-    } catch (e: any) {
-      console.log(e);
-      if (typeof e.response.data.message === "string") {
-        setErrormsg(e.response.data.message);
-      } else {
-        setErrormsg(e.response.data.message[0]);
-      }
-      setLoading(false);
+    } else {
+      setErrormsg(Validations);
     }
   };
   // handle change
@@ -100,15 +109,13 @@ const Signincomp: React.FC = () => {
           {errormsg.length > 0 ? (
             <p className="text-red-500 text-center">{`${errormsg}`}</p>
           ) : null}
+          {acceptmsg.length > 0 ? (
+            <p className="text-green-500 text-center">{`${acceptmsg}`}</p>
+          ) : null}
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form
-            className="space-y-6"
-            action="#"
-            method="POST"
-            onSubmit={handleFormSubmit}
-          >
+          <div>
             <div>
               <label
                 htmlFor="username"
@@ -141,6 +148,7 @@ const Signincomp: React.FC = () => {
                   id="email"
                   name="email"
                   type="email"
+                  value={formData.email}
                   onChange={(e) => handleInputChange(e, "email")}
                   autoComplete="email"
                   required
@@ -163,6 +171,7 @@ const Signincomp: React.FC = () => {
                   id="password"
                   name="password"
                   type="password"
+                  value={formData.password}
                   onChange={(e) => handleInputChange(e, "password")}
                   autoComplete="current-password"
                   required
@@ -184,6 +193,7 @@ const Signincomp: React.FC = () => {
                   id="ConfirmPassword"
                   name="ConfirmPassword"
                   type="password"
+                  value={formData.ConfirmPassword}
                   onChange={(e) => handleInputChange(e, "ConfirmPassword")}
                   autoComplete="current-password"
                   required
@@ -195,12 +205,15 @@ const Signincomp: React.FC = () => {
             <div>
               <button
                 type="submit"
+                onClick={() => {
+                  handleFormSubmit();
+                }}
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign up
               </button>
             </div>
-          </form>
+          </div>
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Already have account ? <Link href="/signin">Sign in</Link>

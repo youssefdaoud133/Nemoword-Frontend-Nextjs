@@ -1,8 +1,3 @@
-![Alt Text](https://drive.google.com/uc?export=view&id=1hu-SNNIuvMnTUKU-MMH7izhCSdOH1a-J)
-<h1>Start add your fishes</h1>
-<img src ="https://drive.google.com/uc?export=view&id=1k8RtyISmoWQ8BLGvFJjAY3XctAZwoj5h">
-
-
 
 # Nemoword - Password Management System
 
