@@ -3,6 +3,10 @@
 
 import React, { FC, useEffect, useState } from "react";
 
+// import call endpoint class
+import { CallEndpoint } from "../../utils/axios";
+const endpoint = new CallEndpoint(undefined, "fish/SpecificUser");
+
 // import component
 
 import {
@@ -30,6 +34,11 @@ import FieldOfTableComp from "./FieldOfTableComp";
 
 import QRCode from "react-qr-code";
 import AddFishCom from "./AddFishCom";
+// rtk
+import { useDispatch, useSelector } from "react-redux";
+import { setToken } from "../../rtk/slices/tokenSlice";
+import { RootState, AppDispatch } from "../../rtk/store";
+import Loader from "../loader";
 
 const Fishes = [
   {
@@ -54,11 +63,31 @@ const FishTaple: FC<FishTapleProps> = () => {
   const [ShowQr, setShowQr] = useState(false);
   const [ShowTable, setShowTable] = useState(true);
   const [StyleShowQr, setStyleShowQr] = useState(false);
+  const [data, setData] = useState<
+    [{ email: string; password: string; user: {} }] | null
+  >(null);
+
+  // use selector
+  const token = useSelector((state: RootState) => state.token.token);
 
   // use effect
   useEffect(() => {
     setShowQr(false);
   }, [SelectedFish]);
+  // use effect
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response: [{ email: string; password: string; user: {} }] =
+          await endpoint.FindAllFishesRelatedToUser(token);
+        setData(response);
+      } catch (err: any) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // handles
   const handleSelectFish = (email: string, password: string) => {
@@ -89,6 +118,10 @@ const FishTaple: FC<FishTapleProps> = () => {
     });
     return FinalFormat;
   };
+
+  if (!data) {
+    return <Loader />;
+  }
   return (
     <>
       {ShowQr && (
@@ -127,7 +160,7 @@ const FishTaple: FC<FishTapleProps> = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Fishes.map((item) => (
+              {data.map((item) => (
                 // eslint-disable-next-line react/jsx-key
                 <FieldOfTableComp
                   email={item.email}

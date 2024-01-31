@@ -1,6 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+// import call endpoint class
+import { CallEndpoint } from "../../utils/axios";
+const endpoint = new CallEndpoint(undefined, "auth/myprofile");
 
 // rtk
 import { useDispatch, useSelector } from "react-redux";
@@ -9,17 +12,14 @@ import { RootState, AppDispatch } from "../../rtk/store";
 
 // ccomponents
 import Loader from "../loader";
-import ContentProfile from "./Contentprofile";
+import ContentProfile from "./ContentProfile";
 import { CashIcon, UserIcon } from "@heroicons/react/outline";
 import { Card, Flex, Icon, Metric, Text } from "@tremor/react";
 
 interface User {
   id: number;
-  name: string;
+  username: string;
   email: string;
-  password: string;
-  age: number;
-  city: string;
 }
 
 export default function MyProfileComp() {
@@ -28,39 +28,12 @@ export default function MyProfileComp() {
 
   // use selector
   const token = useSelector((state: RootState) => state.token.token);
-  // old code
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint URL
-  //     const apiUrl = "http://localhost:8000/auth/myprofile";
 
-  //     try {
-  //       const response = await axios.get(apiUrl, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`, // Send the token in the header
-  //         },
-  //       });
-  //       setData(response.data);
-  //     } catch (err: any) {
-  //       setError(err);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
   useEffect(() => {
     const fetchData = async () => {
-      // Retrieve user data from localStorage
-
       try {
-        const storedUserData = localStorage.getItem("userData");
-        if (storedUserData) {
-          const parsedUserData = JSON.parse(storedUserData);
-          setData(parsedUserData);
-          console.log(parsedUserData);
-        } else {
-          setError("no data in local storage");
-        }
+        const response: User = await endpoint.myprofile(token);
+        setData(response);
       } catch (err: any) {
         setError(err);
       }
@@ -68,6 +41,26 @@ export default function MyProfileComp() {
 
     fetchData();
   }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     // Retrieve user data from localStorage
+
+  //     try {
+  //       const storedUserData = localStorage.getItem("userData");
+  //       if (storedUserData) {
+  //         const parsedUserData = JSON.parse(storedUserData);
+  //         setData(parsedUserData);
+  //         console.log(parsedUserData);
+  //       } else {
+  //         setError("no data in local storage");
+  //       }
+  //     } catch (err: any) {
+  //       setError(err);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -85,7 +78,7 @@ export default function MyProfileComp() {
             <Icon icon={UserIcon} color="blue" variant="solid" size="sm" />
             <div>
               <Text>Name</Text>
-              <Text className="text-sm">{data.name}</Text>
+              <Text className="text-sm">{data.username}</Text>
             </div>
           </Flex>
         </Card>

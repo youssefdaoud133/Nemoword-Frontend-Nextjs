@@ -27,4 +27,35 @@ export class CallEndpoint {
 
     return response.data;
   }
+
+  // log in
+  async signin(formData: {
+    email: string;
+    password: string;
+  }): Promise<{ access_token: string; message: string }> {
+    const response = await axios.post<any>(this.FullUrl, formData);
+    return response.data;
+  }
+  // my profile
+  async myprofile(
+    token: string
+  ): Promise<{ id: number; username: string; email: string }> {
+    const response = await axios.get(this.FullUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Send the token in the header
+      },
+    });
+    return response.data;
+  }
+  // FindAllFishesRelatedToUser
+  async FindAllFishesRelatedToUser(
+    token: string
+  ): Promise<[{ email: string; password: string; user: {} }]> {
+    const response = await axios.get(this.FullUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Send the token in the header
+      },
+    });
+    return response.data;
+  }
 }

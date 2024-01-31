@@ -2,7 +2,9 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import axios from "axios";
-
+// import call endpoint class
+import { CallEndpoint } from "../../utils/axios";
+const endpoint = new CallEndpoint(undefined, "auth/login");
 // rtk
 import { useDispatch, useSelector } from "react-redux";
 import { setToken } from "../../rtk/slices/tokenSlice";
@@ -40,48 +42,24 @@ const Signincomp: React.FC = () => {
   // useRouter
   const router = useRouter();
   // old code
-  // // handles button
-  // const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   try {
-  //     setLoading(true);
-  //     const response = await axios.post<ResponseInterface>(
-  //       "http://localhost:8000/auth/login",
-  //       formData
-  //     );
-  //     if (!response.data.access_token) {
-  //       setErrormsg(response.data.message);
-  //       setLoading(false);
-  //     } else {
-  //       dispatch(setToken(response.data.access_token));
-  //       console.log(token);
-
-  //       router.push("/myprofile");
-  //     }
-  //   } catch (error) {
-  //     setLoading(false);
-  //     console.error("Error making the post request:", error);
-  //   }
-
-  // };
   // handles button
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { email, password } = formData;
+    setErrormsg("");
     try {
-      const result: any = await authenticateUser(email, password);
-
-      if (result.success) {
-        console.log("Login successful:", result.user);
-        // Save user data to localStorage
-        localStorage.setItem("userData", JSON.stringify(result.user));
-        router.push("/myprofile");
-        // Redirect to the next page or perform other actions
+      setLoading(true);
+      const response = await endpoint.signin(formData);
+      if (!response.access_token) {
+        setErrormsg(response.message);
+        setLoading(false);
       } else {
-        setErrormsg(`Login failed : ${result.message}`);
+        dispatch(setToken(response.access_token));
+
+        router.push("/myprofile");
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      setLoading(false);
+      console.error("Error making the post request:", error);
     }
   };
 
