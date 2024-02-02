@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 // import call endpoint class
 import { CallEndpoint } from "../../utils/axios";
@@ -41,7 +41,11 @@ const Signincomp: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   // useRouter
   const router = useRouter();
-  // old code
+  //use effect
+  // make sure if user back page he should sign in again
+  useEffect(() => {
+    dispatch(setToken(""));
+  }, []);
   // handles button
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

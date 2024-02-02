@@ -15,6 +15,9 @@ import Loader from "../loader";
 import ContentProfile from "./ContentProfile";
 import { CashIcon, UserIcon } from "@heroicons/react/outline";
 import { Card, Flex, Icon, Metric, Text } from "@tremor/react";
+import router from "next/router";
+// use route
+import { useRouter } from "next/navigation";
 
 interface User {
   id: number;
@@ -28,39 +31,25 @@ export default function MyProfileComp() {
 
   // use selector
   const token = useSelector((state: RootState) => state.token.token);
-
+  // useRouter
+  const router = useRouter();
+  // check if user go direct to this page
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response: User = await endpoint.myprofile(token);
-        setData(response);
-      } catch (err: any) {
-        setError(err);
-      }
-    };
+    if (!token) {
+      router.push("/");
+    } else {
+      const fetchData = async () => {
+        try {
+          const response: User = await endpoint.myprofile(token);
+          setData(response);
+        } catch (err: any) {
+          setError(err);
+        }
+      };
 
-    fetchData();
+      fetchData();
+    }
   }, []);
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     // Retrieve user data from localStorage
-
-  //     try {
-  //       const storedUserData = localStorage.getItem("userData");
-  //       if (storedUserData) {
-  //         const parsedUserData = JSON.parse(storedUserData);
-  //         setData(parsedUserData);
-  //         console.log(parsedUserData);
-  //       } else {
-  //         setError("no data in local storage");
-  //       }
-  //     } catch (err: any) {
-  //       setError(err);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   if (error) {
     return <div>Error: {error}</div>;
