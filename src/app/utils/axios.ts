@@ -58,4 +58,26 @@ export class CallEndpoint {
     });
     return response.data;
   }
+
+  //add fish
+
+  async AddFish(
+    formData: {
+      email: string;
+      password: string;
+    },
+    token: string
+  ): Promise<{ email: string; password: string }> {
+    const response = await axios.post<{ email: string; password: string }>(
+      this.FullUrl,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Send the token in the header
+        },
+      }
+    );
+
+    return response.data;
+  }
 }

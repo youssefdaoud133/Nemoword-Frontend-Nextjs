@@ -6,6 +6,7 @@ import React, { FC, useEffect, useState } from "react";
 // import call endpoint class
 import { CallEndpoint } from "../../utils/axios";
 const endpoint = new CallEndpoint(undefined, "fish/SpecificUser");
+const endpointToAddFish = new CallEndpoint(undefined, "fish");
 
 // import component
 
@@ -39,17 +40,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setToken } from "../../rtk/slices/tokenSlice";
 import { RootState, AppDispatch } from "../../rtk/store";
 import Loader from "../loader";
-
-const Fishes = [
-  {
-    email: "youssef@gmail.com",
-    password: "12345678",
-  },
-  {
-    email: "marina@gmail.com",
-    password: "12345678",
-  },
-];
+import axios from "axios";
 
 interface FishTapleProps {}
 
@@ -61,6 +52,7 @@ const FishTaple: FC<FishTapleProps> = () => {
 
   const [StringToShare, setStringToShare] = useState("");
   const [ShowQr, setShowQr] = useState(false);
+  const [LoadFishesEffectFactor, setLoadFishesEffectFactor] = useState(false);
   const [ShowTable, setShowTable] = useState(true);
   const [StyleShowQr, setStyleShowQr] = useState(false);
   const [data, setData] = useState<
@@ -87,7 +79,7 @@ const FishTaple: FC<FishTapleProps> = () => {
     };
 
     fetchData();
-  }, []);
+  }, [LoadFishesEffectFactor]);
 
   // handles
   const handleSelectFish = (email: string, password: string) => {
@@ -104,9 +96,21 @@ const FishTaple: FC<FishTapleProps> = () => {
     setSelectedFish(updatedFish);
   };
   // to add fish
-  const handleaddfish = (email: string, password: string) => {
-    Fishes.unshift({ email, password });
-    setShowTable(true);
+  const handleaddfish = async (email: string, password: string) => {
+    try {
+      const NewFish = await endpointToAddFish.AddFish(
+        { email, password },
+        token
+      );
+
+      // call use effect
+      setData(null);
+      setLoadFishesEffectFactor(!LoadFishesEffectFactor);
+
+      setShowTable(true);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const ConvertFishestoStringToCanShare = () => {
