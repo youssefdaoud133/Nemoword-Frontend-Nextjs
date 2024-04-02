@@ -50,7 +50,7 @@ export class CallEndpoint {
   // FindAllFishesRelatedToUser
   async FindAllFishesRelatedToUser(
     token: string
-  ): Promise<[{ email: string; password: string; user: {} }]> {
+  ): Promise<[{ email: string; password: string; user: {} ;id:number }]> {
     const response = await axios.get(this.FullUrl, {
       headers: {
         Authorization: `Bearer ${token}`, // Send the token in the header
@@ -71,6 +71,26 @@ export class CallEndpoint {
     const response = await axios.post<{ email: string; password: string }>(
       this.FullUrl,
       formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Send the token in the header
+        },
+      }
+    );
+
+    return response.data;
+  }
+
+  //Delete fish
+
+  async DeleteFish(
+  UserID:string,
+    token: string
+  ): Promise<any> {
+    const response = await axios.delete<{ response : {
+      message: string;
+    } }>(
+      this.FullUrl+"/"+UserID,
       {
         headers: {
           Authorization: `Bearer ${token}`, // Send the token in the header

@@ -6,7 +6,7 @@ import React, { FC, useEffect, useState } from "react";
 // import call endpoint class
 import { CallEndpoint } from "../../utils/axios";
 const endpoint = new CallEndpoint(undefined, "fish/SpecificUser");
-const endpointToAddFish = new CallEndpoint(undefined, "fish");
+const endpointToAddDeleteFish = new CallEndpoint(undefined, "fish");
 
 // import component
 
@@ -56,7 +56,7 @@ const FishTaple: FC<FishTapleProps> = () => {
   const [ShowTable, setShowTable] = useState(true);
   const [StyleShowQr, setStyleShowQr] = useState(false);
   const [data, setData] = useState<
-    [{ email: string; password: string; user: {} }] | null
+    [{ email: string; password: string; user: {} ; id:number}] | null
   >(null);
 
   // use selector
@@ -70,7 +70,7 @@ const FishTaple: FC<FishTapleProps> = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response: [{ email: string; password: string; user: {} }] =
+        const response: [{ email: string; password: string; user: {} ; id:number }] =
           await endpoint.FindAllFishesRelatedToUser(token);
         setData(response);
       } catch (err: any) {
@@ -98,7 +98,7 @@ const FishTaple: FC<FishTapleProps> = () => {
   // to add fish
   const handleaddfish = async (email: string, password: string) => {
     try {
-      const NewFish = await endpointToAddFish.AddFish(
+      const NewFish = await endpointToAddDeleteFish.AddFish(
         { email, password },
         token
       );
@@ -112,6 +112,27 @@ const FishTaple: FC<FishTapleProps> = () => {
       console.log(e);
     }
   };
+
+  // to Delete Fish
+  const HandleDeleteFish = async (UserID:string) => {
+    try{
+      const RemoveFish = await endpointToAddDeleteFish.DeleteFish(
+        UserID,
+        token
+      );
+        console.log(RemoveFish);
+              // call use effect
+      setData(null);
+      setLoadFishesEffectFactor(!LoadFishesEffectFactor);
+        
+
+    }catch(e){
+      console.log(e);
+    }
+    
+
+  };
+
 
   const ConvertFishestoStringToCanShare = () => {
     let FinalFormat = "";
@@ -161,16 +182,22 @@ const FishTaple: FC<FishTapleProps> = () => {
                 <TableHeaderCell>Password</TableHeaderCell>
                 <TableHeaderCell>Select</TableHeaderCell>
                 <TableHeaderCell>Hide</TableHeaderCell>
+                <TableHeaderCell>Delete</TableHeaderCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data.map((item) => (
                 // eslint-disable-next-line react/jsx-key
                 <FieldOfTableComp
+
                   email={item.email}
                   password={item.password}
                   AddFish={handleSelectFish}
                   RemoveFish={handleRemoveFish}
+                  DeleteFish={HandleDeleteFish}
+                  FishID={item.id.toString()}
+
+                  
                 />
               ))}
             </TableBody>

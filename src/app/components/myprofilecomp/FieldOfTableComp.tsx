@@ -9,6 +9,7 @@ import {
   StatusOnlineIcon,
   EyeIcon,
   EyeOffIcon,
+  TrashIcon
 } from "@heroicons/react/outline";
 import {
   Badge,
@@ -31,6 +32,8 @@ interface FieldOfTableCompProps {
   password: string;
   AddFish: (email: string, password: string) => void;
   RemoveFish: (email: string, password: string) => void;
+  DeleteFish: (UserID:string) => any;
+  FishID:string;
 }
 
 const FieldOfTableComp: React.FC<FieldOfTableCompProps> = ({
@@ -38,6 +41,8 @@ const FieldOfTableComp: React.FC<FieldOfTableCompProps> = ({
   password,
   AddFish,
   RemoveFish,
+  DeleteFish,
+  FishID
 }) => {
   // usetate
   const [showPassword, setShowPassword] = useState(false);
@@ -59,6 +64,9 @@ const FieldOfTableComp: React.FC<FieldOfTableCompProps> = ({
     setIsSwitchOn(value);
   };
 
+
+
+
   return (
     <TableRow>
       <TableCell>{email}</TableCell>
@@ -79,6 +87,13 @@ const FieldOfTableComp: React.FC<FieldOfTableCompProps> = ({
           icon={showPassword ? EyeIcon : EyeOffIcon}
           onClick={togglePasswordVisibility}
           style={{ cursor: "pointer" }}
+        />
+      </TableCell>
+      <TableCell>
+        <Icon
+          icon={TrashIcon}
+          onClick={() => DeleteFish(FishID)}
+          style={{ cursor: "pointer",color: "red"  }}
         />
       </TableCell>
     </TableRow>
