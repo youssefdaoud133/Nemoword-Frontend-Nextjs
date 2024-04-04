@@ -9,10 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@heroicons/react": "^1.0.6",
+    "@mui/material": "^5.15.14",
     "@reduxjs/toolkit": "^1.9.7",
     "@tremor/react": "^3.11.1",
     "axios": "^1.5.1",

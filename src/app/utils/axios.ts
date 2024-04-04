@@ -12,6 +12,12 @@ export class CallEndpoint {
     this.AddedUrl = AddedUrl;
     this.FullUrl = this.baseUrl + this.AddedUrl;
   }
+  SetFullUrl(FURL : string){
+    this.FullUrl = FURL;
+  }
+  GetFullUrl():string{
+    return this.FullUrl ;
+  }
 
   // Methods
   async signup(formData: {
@@ -100,4 +106,26 @@ export class CallEndpoint {
 
     return response.data;
   }
+
+    //update fish
+
+    async UpdateFish(
+      formData: {
+        email: string;
+        password: string;
+      },
+      token: string
+    ): Promise<{ email: string; password: string }> {
+      const response = await axios.put<{ email: string; password: string }>(
+        this.FullUrl,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send the token in the header
+          },
+        }
+      );
+  
+      return response.data;
+    }
 }

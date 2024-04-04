@@ -183,6 +183,8 @@ const FishTaple: FC<FishTapleProps> = () => {
                 <TableHeaderCell>Select</TableHeaderCell>
                 <TableHeaderCell>Hide</TableHeaderCell>
                 <TableHeaderCell>Delete</TableHeaderCell>
+                <TableHeaderCell>Edit</TableHeaderCell>
+
               </TableRow>
             </TableHead>
             <TableBody>

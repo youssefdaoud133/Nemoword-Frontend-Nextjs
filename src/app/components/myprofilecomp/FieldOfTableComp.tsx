@@ -3,13 +3,19 @@
 
 import React, { useState } from "react";
 
+// material ui 
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+
 // import component
 
 import {
   StatusOnlineIcon,
   EyeIcon,
   EyeOffIcon,
-  TrashIcon
+  TrashIcon,
+  PencilIcon
 } from "@heroicons/react/outline";
 import {
   Badge,
@@ -26,6 +32,7 @@ import {
   Icon,
 } from "@tremor/react";
 import { hashPassword } from "./Hashpassword";
+import EditFish from "./EditFish";
 
 interface FieldOfTableCompProps {
   email: string;
@@ -47,6 +54,26 @@ const FieldOfTableComp: React.FC<FieldOfTableCompProps> = ({
   // usetate
   const [showPassword, setShowPassword] = useState(false);
   const [isSwitchOn, setIsSwitchOn] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
+  const [CurrentFish,setCurrentFish] = useState<{
+    email : string,
+    password:string,
+    id:string
+  }>({
+    email : "",
+    password:"",
+    id:""
+  })
+  const [CurrentEmail, setCurrentEmail] = useState(email);
+  const [CurrentPassword, setCurrentPassword] = useState(password);
+
+
+  // set update email and password
+  const Set_Email_Password = (NewEmail :string,NewPassword : string) => {
+    setCurrentEmail(NewEmail);
+    setCurrentPassword(NewPassword);
+
+  }
 
   // handles
   const togglePasswordVisibility = () => {
@@ -63,15 +90,28 @@ const FieldOfTableComp: React.FC<FieldOfTableCompProps> = ({
 
     setIsSwitchOn(value);
   };
+  // handle small window
+  const handleClick = (email:string, password:string,id:string) => {
+    setCurrentFish({
+      email,
+      password,
+      id
+    });
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
 
 
 
   return (
     <TableRow>
-      <TableCell>{email}</TableCell>
+      <TableCell>{CurrentEmail}</TableCell>
       <TableCell>
-        <Text>{showPassword ? password : hashPassword(password)}</Text>
+        <Text>{showPassword ? CurrentPassword : hashPassword(CurrentPassword)}</Text>
       </TableCell>
 
       <TableCell>
@@ -96,6 +136,17 @@ const FieldOfTableComp: React.FC<FieldOfTableCompProps> = ({
           style={{ cursor: "pointer",color: "red"  }}
         />
       </TableCell>
+      <TableCell>
+        <Icon
+          icon={PencilIcon}
+          onClick={() =>{handleClick(CurrentEmail,CurrentPassword,FishID)}}
+          style={{ cursor: "pointer",color: "green"  }}
+        />
+      </TableCell>
+      
+      {open &&<EditFish emailP={CurrentFish.email} passwordP={CurrentFish.password} FishID={CurrentFish.id} open={open} handleClose={handleClose} Set_Email_Password = {Set_Email_Password}/>}
+
+      
     </TableRow>
   );
 };
